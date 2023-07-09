@@ -294,32 +294,73 @@ class Cancel:
             tup = (ticketID.get(),)
             myCursor = mydb.cursor()
             myCursor.execute(sql, tup)
-            myCursor.close()
             mydb.commit()
-
+            myCursor.close()
             messagebox.showinfo("Cancel Ticket", "Ticket Cancellation Successful")
             self.top.destroy()
-
+            goToHome()
     def searchTicket(self, ticketID):
+        name=StringVar()
+        age=StringVar()
+        flightID=StringVar()
         sql = "SELECT NAME, AGE, FLIGHT_ID FROM TICKETS WHERE TICKET_ID = %s"
         tup = (ticketID.get().strip(),)
-        myCursor = mydb.cursor()
-        myCursor.execute(sql, tup)
-        result = myCursor.fetchone()
-        myCursor.close()
-
-        if result is None:
-            messagebox.showerror("Incorrect Ticket ID", "Enter the Correct Ticket ID")
+        if ticketID.get().strip()=="1":
+          messagebox.showerror("Incorrect Ticket ID","Enter the correct Ticket ID")
         else:
-            name.set(result[0])
-            age.set(result[1])
-            flightID.set(result[2])
+          myCursor = mydb.cursor()
+          myCursor.execute(sql, tup)
+          result = myCursor.fetchone()
+          myCursor.close()
+          if result is None:
+              messagebox.showerror("Incorrect Ticket ID", "Enter the Correct Ticket ID")
+          else:
+              name.set(result[0])
+              age.set(result[1])
+              flightID.set(result[2])
 
     def cancelPage(self):
         tickets = StringVar()
 
-        Label(self.top, text="Ticket Cancellation", font=("ARIAL", 25Apologies for the confusion, but the code you provided seems to be incomplete and contains syntax errors. Could you please provide the complete code or specify the specific part you need assistance with?    
+        Label(self.top, text="Ticket Cancellation", font=("ARIAL", 25)).pack()
+        Label(self.top, text="Ticket ID", font=("ARIAL", 16)).place(x=40, y=100)
+        Entry(self.top, textvariable=ticketID, width=10).place(x=150, y=100)
 
-        Button(self.top, text="Pay", font=("ARIAL", 16), pady=10, width=15,
-               command=lambda: self.pay(cardNumber, cardName, expiry, cvv)).place(x=175, y=350)
-        
+        Button(self.top, text="Search Ticket", font=("ARIAL", 16), pady=10, width=15,bd='5',
+               command=lambda: self.searchTicket(ticketID)).place(x=300, y=100)
+
+        Button(self.top, text="Cancel Ticket", font=("ARIAL", 26), pady=10, width=15,bd='5'
+               command=lambda: self.cancelTicket(ticketID)).place(x=175, y=350)
+
+        Button(self.top, text="Home", font=("ARIAL", 16), pady=10, width=15,bd='5'
+               command=lambda: triggerHome(self.top)).pack()
+
+class Logout:
+
+    def __init__(self, master):
+        self.top = master
+
+    def submit(self, feedbackBox):
+        # Implementation for submitting feedback
+        pass
+
+    def LogoutPage(self):
+        Label(self.top, text="Enter your valuable feedback", font=("ARIAL", 25)).pack()
+
+        feedbackBox = Text(self.top, height=20, width=10, bd=10)
+        feedbackBox.pack()
+
+        Button(self.top, text="Submit", font=("ARIAL", 26), pady=10, width=15, bd="5801",
+               command=lambda: self.submit(feedbackBox)).pack()
+    
+if __name__ == "__main__":
+    top = Tk()
+    top.geometry("500x500")
+    top.title("Holiday Travels")
+
+    objectLogin = Login(top)
+    Login.LoginPage(objectLogin)
+
+    top.mainloop()
+
+    mydb.close()        
